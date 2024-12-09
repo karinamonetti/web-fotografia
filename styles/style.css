@@ -1,0 +1,21 @@
+/*
+Le quise cambiar el color a los links.
+*/
+.mi-link {
+  color: rgb(162, 162, 162);
+  text-decoration: none;
+}
+
+.mi-link:hover {
+  color: rgb(90, 90, 90);
+}
+
+/*
+Cambié el tamaño de la imagen porque sino quedaba ovalada
+*/
+.mi-imagen {
+  width: 280px;
+  height: 280px;
+  object-fit: cover;
+  margin-right: 20px;
+}
