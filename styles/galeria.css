@@ -1,0 +1,23 @@
+/* Estilos adicionales */
+.img-thumbnail {
+  cursor: pointer;
+  transition: transform 0.3s, ease 0.3s;
+  width: 100%; /* Asegura que las miniaturas llenen su contenedor */
+  aspect-ratio: 4 / 3; /* Mantiene una relación de aspecto de 4:3 */
+  object-fit: cover; /* Mantiene la proporción al recortar */
+}
+
+.img-thumbnail:hover {
+  transform: scale(1.1);
+  filter: grayscale(0%);
+}
+
+.img-thumbnail.bw {
+  filter: grayscale(100%);
+}
+
+.gallery-main-image {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Mantiene una relación de aspecto de 16:9 */
+  object-fit: cover; /* Mantiene la proporción al recortar */
+}

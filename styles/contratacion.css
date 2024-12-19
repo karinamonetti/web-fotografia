@@ -1,0 +1,17 @@
+.container {
+  max-width: 600px;
+}
+
+.invalid-feedback {
+  display: block;
+  font-size: 0.875em;
+  color: red;
+}
+
+.is-invalid {
+  border-color: red;
+}
+
+.is-valid {
+  border-color: green;
+}
