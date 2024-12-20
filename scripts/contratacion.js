@@ -1,6 +1,5 @@
 import { Solicitud } from "./Solicitud.js";
 
-
 $(document).ready(function () {
   // Mostrar el campo "Otro" si el tipo de evento es "Otro"
   $("#evento").on("change", function () {
@@ -11,7 +10,8 @@ $(document).ready(function () {
     }
   });
 
-  // Validación del formulario
+  ////////////////////// VALIDACIÓN DEL FORMULARIO //////////////////////
+  // Si pasa la validación entonces crea una instancia de la clase,  y la guarda en el array del LocalStorage.
   $("#formularioContratacion").on("submit", function (e) {
     e.preventDefault(); // Evita el envío por defecto
 
@@ -108,34 +108,31 @@ $(document).ready(function () {
 
       // guardo la solicitud en el localstorage.
       guardarSolicitudEnLocalStorage(nuevaSolicitud);
-
-      
     }
   });
 
-  // Guardar una solicitud en LocalStorage
+  // Guardar una solicitud (instancia) en LocalStorage
   function guardarSolicitudEnLocalStorage(solicitud) {
     const solicitudes = obtenerSolicitudesDeLocalStorage();
     solicitudes.push(solicitud);
     localStorage.setItem("solicitudesDeTrabajo", JSON.stringify(solicitudes));
   }
 
-  // Obtener todas las solicitudes desde LocalStorage
+  // Obtener todas las solicitudes (instancias) desde LocalStorage
   function obtenerSolicitudesDeLocalStorage() {
-    return JSON.parse(localStorage.getItem('solicitudesDeTrabajo')) || [];
-}
+    return JSON.parse(localStorage.getItem("solicitudesDeTrabajo")) || [];
+  }
 });
 
-
-// CARGAR DATOS EN LA TABLA
+////////////////////// CARGAR DATOS EN LA TABLA  //////////////////////
 // Función para cargar y mostrar las solicitudes en la tabla
 function cargarSolicitudes() {
   const solicitudes = obtenerSolicitudesDeLocalStorage();
 
   // Obtener todas las solicitudes desde LocalStorage
   function obtenerSolicitudesDeLocalStorage() {
-    return JSON.parse(localStorage.getItem('solicitudesDeTrabajo')) || [];
-}
+    return JSON.parse(localStorage.getItem("solicitudesDeTrabajo")) || [];
+  }
 
   const tablaCuerpo = $("#tablaSolicitudes tbody");
   tablaCuerpo.empty(); // Limpiar la tabla antes de añadir las filas
@@ -143,16 +140,23 @@ function cargarSolicitudes() {
   solicitudes.map((solicitud, index) => {
     const fila = `
       <tr>
+        <td>${solicitud.id}</td>
         <td>${solicitud.nombre}</td>
         <td>${solicitud.apellidos}</td>
         <td>${solicitud.email}</td>
         <td>${solicitud.telefono}</td>
-        <td>${solicitud.tipoEvento}${solicitud.especificarEvento ? ` (${solicitud.especificarEvento})` : ''}</td>
+        <td>${solicitud.tipoEvento}${
+      solicitud.especificarEvento ? ` (${solicitud.especificarEvento})` : ""
+    }</td>
         <td>${solicitud.lugar}</td>
         <td>${solicitud.fecha}</td>
         <td>
-          <button class="btn btn-success btn-aceptar" data-index="${index}">Aceptar</button>
-          <button class="btn btn-danger btn-rechazar" data-index="${index}">Rechazar</button>
+          <button class="btn btn-success btn-aceptar w-100" data-id="${
+            solicitud.id
+          }">Aceptar</button>
+          <button class="btn btn-danger btn-rechazar w-100" data-id="${
+            solicitud.id
+          }">Rechazar</button>
         </td>
       </tr>
     `;
@@ -166,32 +170,141 @@ function cargarSolicitudes() {
   });
 
   $(".btn-rechazar").click(function () {
-    const index = $(this).data("index");
-    rechazarSolicitud(index);
+    const id = $(this).data("id"); // Obtener el ID desde el atributo data-id
+  rechazarSolicitud(id); // Llamar a la función para rechazar la solicitud
   });
 }
 
 // Función para aceptar una solicitud
 function aceptarSolicitud(index) {
-  const solicitudes = obtenerSolicitudesDeLocalStorage();
-  alert(`Solicitud de ${solicitudes[index].nombre} aceptada.`);
-  // Aquí puedes añadir lógica adicional para procesar la aceptación
-  solicitudes.splice(index, 1); // Eliminar la solicitud aceptada
-  localStorage.setItem("solicitudesDeTrabajo", JSON.stringify(solicitudes));
-  cargarSolicitudes(); // Recargar la tabla
+
+  
+  // Obtener todas las solicitudes desde LocalStorage
+  function obtenerSolicitudesDeLocalStorage() {
+    return JSON.parse(localStorage.getItem("solicitudesDeTrabajo")) || [];
+  }
+  const solicitudesPendientes = obtenerSolicitudesDeLocalStorage();
+  const solicitudesAceptadas = JSON.parse(localStorage.getItem("solicitudesAceptadas")) || [];
+
+  // Mover la solicitud de pendientes a aceptadas
+  const solicitud = solicitudesPendientes.splice(index, 1)[0];
+  solicitudesAceptadas.push(solicitud);
+
+  // Actualizar localStorage
+  localStorage.setItem("solicitudesDeTrabajo", JSON.stringify(solicitudesPendientes));
+  localStorage.setItem("solicitudesAceptadas", JSON.stringify(solicitudesAceptadas));
+
+  alert(`Solicitud de ${solicitud.nombre} ${solicitud.apellidos} aceptada.`);
+  
+  // Recargar la tabla
+  cargarSolicitudes(); // Recargar la tabla para reflejar los cambios
 }
 
 // Función para rechazar una solicitud
-function rechazarSolicitud(index) {
+function rechazarSolicitud(id) {
+  // Obtener todas las solicitudes desde LocalStorage
+  function obtenerSolicitudesDeLocalStorage() {
+    return JSON.parse(localStorage.getItem("solicitudesDeTrabajo")) || [];
+  }
   const solicitudes = obtenerSolicitudesDeLocalStorage();
-  alert(`Solicitud de ${solicitudes[index].nombre} rechazada.`);
-  // Aquí puedes añadir lógica adicional para procesar el rechazo
-  solicitudes.splice(index, 1); // Eliminar la solicitud rechazada
-  localStorage.setItem("solicitudesDeTrabajo", JSON.stringify(solicitudes));
-  cargarSolicitudes(); // Recargar la tabla
+  
+  // Encontrar el índice de la solicitud que tiene el ID correspondiente
+  const solicitudIndex = solicitudes.findIndex(solicitud => solicitud.id === id);
+
+  if (solicitudIndex !== -1) {
+    alert(`Solicitud de ${solicitudes[solicitudIndex].nombre} rechazada.`);
+    
+    // Eliminar la solicitud del array
+    solicitudes.splice(solicitudIndex, 1);
+    
+    // Actualizar el localStorage con la lista actualizada
+    localStorage.setItem("solicitudesDeTrabajo", JSON.stringify(solicitudes));
+    
+    // Recargar la tabla para reflejar los cambios
+    cargarSolicitudes();
+  } else {
+    alert("No se encontró la solicitud.");
+  }
 }
 
 // Llamar a cargarSolicitudes cuando el documento esté listo
 $(document).ready(function () {
   cargarSolicitudes();
+});
+
+
+
+//////////// CARGAR DATOS EN TABLAS DE TRABAJOS 
+$(document).ready(function () {
+  // Cargar trabajos por realizar y trabajos realizados
+  cargarTrabajosPorRealizar();
+
+  // Función para cargar los trabajos por realizar y trabajos realizados
+  function cargarTrabajosPorRealizar() {
+    const solicitudesAceptadas = JSON.parse(localStorage.getItem("solicitudesAceptadas")) || [];
+    const trabajosRealizados = JSON.parse(localStorage.getItem("trabajosRealizados")) || [];
+
+    // Cargar "Trabajos por Realizar"
+    const trabajosPorRealizarTable = $("#trabajosPorRealizar");
+    trabajosPorRealizarTable.empty();
+    
+    solicitudesAceptadas.forEach((solicitud, index) => {
+      trabajosPorRealizarTable.append(`
+        <tr>
+          <td>${solicitud.nombre} ${solicitud.apellidos}</td>
+          <td>${solicitud.lugar}</td>
+          <td>${solicitud.fecha}</td>
+          <td>
+            <input type="checkbox" class="form-check-input" data-index="${index}">
+          </td>
+        </tr>
+      `);
+    });
+
+    // Cargar "Trabajos Realizados"
+    const trabajosRealizadosTable = $("#trabajosRealizados");
+    trabajosRealizadosTable.empty();
+
+    trabajosRealizados.forEach((trabajo) => {
+      trabajosRealizadosTable.append(`
+        <tr>
+          <td>${trabajo.nombre} ${trabajo.apellidos}</td>
+          <td>${trabajo.lugar}</td>
+          <td>${trabajo.fecha}</td>
+          <td>${trabajo.valoracion}</td>
+        </tr>
+      `);
+    });
+
+    // Manejar evento de checkbox para marcar como terminado
+    $("input[type='checkbox']").change(function () {
+      if ($(this).is(":checked")) {
+        const index = $(this).data("index");
+        const trabajo = solicitudesAceptadas[index];
+
+        // Abrir el modal de valoración
+        $("#valoracionModal").modal("show");
+
+        // Al hacer clic en "Guardar", mover el trabajo a "Trabajos Realizados"
+        $("#guardarValoracion").click(function () {
+          const valoracion = $("#valoracion").val();
+
+          // Eliminar de "Trabajos por Realizar" y agregar a "Trabajos Realizados"
+          solicitudesAceptadas.splice(index, 1);
+          trabajo.valoracion = valoracion;
+          trabajosRealizados.push(trabajo);
+
+          // Actualizar localStorage
+          localStorage.setItem("solicitudesAceptadas", JSON.stringify(solicitudesAceptadas));
+          localStorage.setItem("trabajosRealizados", JSON.stringify(trabajosRealizados));
+
+          // Recargar tablas
+          cargarTrabajosPorRealizar();
+
+          // Cerrar el modal
+          $("#valoracionModal").modal("hide");
+        });
+      }
+    });
+  }
 });

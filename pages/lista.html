@@ -44,7 +44,69 @@
       </div>
     </nav>
 
-    
+    <!-- Trabajos por Realizar -->
+    <div class="container my-5">
+      <h2 class="mb-4">Trabajos por Realizar</h2>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Lugar</th>
+            <th>Tipo de Evento</th>
+            <th>Fecha</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="trabajosPorRealizar">
+          <!-- Aquí se cargarán los trabajos por realizar -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Trabajos Realizados -->
+    <div class="container my-5">
+      <h2 class="mb-4">Trabajos Realizados</h2>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Lugar</th>
+            <th>Fecha</th>
+            <th>Valoración</th>
+          </tr>
+        </thead>
+        <tbody id="trabajosRealizados">
+          <!-- Aquí se cargarán los trabajos realizados -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal para la valoración del trabajo -->
+    <div class="modal fade" id="valoracionModal" tabindex="-1" aria-labelledby="valoracionModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="valoracionModalLabel">Valoración del trabajo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="valoracion">¿Cómo fue el trabajo?</label>
+              <select class="form-select" id="valoracion">
+                <option value="estupendo">Estupendo</option>
+                <option value="bien">Bien</option>
+                <option value="mal">Mal</option>
+                <option value="fatal">Fatal</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" id="guardarValoracion">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-dark text-white text-center py-3 mt-auto">

@@ -1,4 +1,6 @@
-/* Estilos adicionales */
+/*
+Necesito aplicar los efectos a la galeria manualmente.
+*/
 .img-thumbnail {
   cursor: pointer;
   transition: transform 0.3s, ease 0.3s;
