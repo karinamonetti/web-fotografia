@@ -19,3 +19,15 @@ Cambié el tamaño de la imagen porque sino quedaba ovalada
   object-fit: cover;
   margin-right: 20px;
 }
+
+/*
+Quiero pegar el footer abajo
+*/
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.content {
+  flex: 1;
+}
